@@ -11,19 +11,24 @@ const chainMaker = {
     return this.chain.length;
   },
 
-  addLink(value) {
-    this.chain.push(`( ${value} )`);
+  addLink(value = '') {
+    if (value === undefined) {
+      this.chain.push('(  )');
+    } else {
+      this.chain.push(`( ${value} )`);
+    }
     return this;
   },
 
   removeLink(position) {
-    if (typeof position !== 'number' || 
-    position < 1 ||
-    position > this.chain.length) {
+    if (position < 1 || 
+        position > this.chain.length || 
+        Math.floor(position) !== position) {
+      this.chain = [];
       throw new Error("You can't remove incorrect link!");
-  }
-  this.chain.splice(position - 1, 1);
-  return this;
+    }
+    this.chain.splice(position - 1, 1);
+    return this;
   },
 
   reverseChain() {
@@ -32,9 +37,12 @@ const chainMaker = {
   },
 
   finishChain() {
-    return this.chain.join('~~');
+    const finishedChain = this.chain.join('~~');
+    this.chain = [];
+    return finishedChain;
   }
 };
+
 
 module.exports = {
   chainMaker
